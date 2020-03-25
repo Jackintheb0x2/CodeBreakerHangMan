@@ -47,10 +47,11 @@ int main()
 		++numberOfSimulation;
 		
 		// Pick new 3 random words from your collection as the secret code word the recruit has to guess. 
-		vector<string> activeWord;
+		vector<string> activeWords;
 		for(int i = 0; i < 3; i++)
 		{
-			activeWord.push_back(wordBank[(rand() % 11) + 1]);
+			int pos = rand() % 9 + 1;
+			activeWords.push_back(wordBank.at(pos));
 		}
 
 		// While recruit hasn’t made too many incorrect guesses and hasn’t guessed the secret word
@@ -58,16 +59,52 @@ int main()
 		{
 			
 			//this gets the size of the first word which will increase after the recruit guesses it correctly
-			currentWordSize = activeWord[currentWord].size();
+			currentWordSize = activeWords.at(currentWord).size();
 			int guesses = currentWordSize * 2;
+
+			//this is the user array where we will check this array with the active word array
+			vector<char> userGuess;
+			vector<char> activeLetters(activeWords.at(currentWord).begin(), activeWords.at(currentWord).end());
+			
+			for(int i = 0; i < currentWordSize; i++)
+			{
+				userGuess.push_back('_');
+			}
 			do
 			{
+				//this displays the current word
+				cout <<  "\nHere is your word:" << activeWords.at(currentWord) << "\n";
+				for(int i = 0; i < userGuess.size(); i++)
+				{
+					cout << userGuess.at(i);
+					cout << " ";
+				}
+				cout << "\n\n";
+
+				//gets the users guess
+				char letter;
+				cout << "Enter your guess :>";
+				cin >> letter;
+
+				//checks the letter to see if it is inside the current word
+				int test = false;
 				for(int i = 0; i < currentWordSize; i++)
 				{
-					cout << "_ ";
+					if(activeWords.at(currentWord).find(letter) == 0)
+					{
+						test = true;
+					}
+					if(test)
+					{
+						userGuess.at(i) = letter;
+						test = false;
+					}
 				}
 				system("pause"); 
 			} while (guesses > 0);//will keep looping until the user gets the correct word or misses too many times
+
+			currentWord++;
+			
 		} while (currentWord < 3);//this will keep looping until all three words have been gone through
 		//     Tell recruit how many incorrect guesses he or she has left
 
