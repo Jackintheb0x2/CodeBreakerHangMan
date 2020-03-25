@@ -66,7 +66,7 @@ int main()
 				{
 					cout << "_ ";
 				}
-				system("pause");
+				system("pause"); 
 			} while (guesses > 0);//will keep looping until the user gets the correct word or misses too many times
 		} while (currentWord < 3);//this will keep looping until all three words have been gone through
 		//     Tell recruit how many incorrect guesses he or she has left
