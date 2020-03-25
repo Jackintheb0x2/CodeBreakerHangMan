@@ -24,28 +24,28 @@ int main()
 	system("pause");
 	// Create a collection of 10 words you had written down manually
 	vector<string> wordBank;
-	wordBank.push_back("Agent");
-	wordBank.push_back("Burned");
-	wordBank.push_back("Cipher");
-	wordBank.push_back("Code");
-	wordBank.push_back("Compromised");
-	wordBank.push_back("Cryptology");
-	wordBank.push_back("Double Agent");
-	wordBank.push_back("Enigma");
-	wordBank.push_back("Escort");
-	wordBank.push_back("Infiltration");
+	wordBank.push_back("agent");
+	wordBank.push_back("burned");
+	wordBank.push_back("cipher");
+	wordBank.push_back("code");
+	wordBank.push_back("compromised");
+	wordBank.push_back("cryptology");
+	wordBank.push_back("espionage");
+	wordBank.push_back("enigma");
+	wordBank.push_back("escort");
+	wordBank.push_back("infiltration");
 	
 	// Create an int var to count the number of simulations being run starting at 1
 	int numberOfSimulation = 0;
 	
-	int currentWord = 0;
-	int currentWordSize;
 
 	do
 	{
-		// Display the simulation # is starting to the recruit. 
+		char answer;
+		int currentWord = 0;
+		// Display the simulation # is starting to the recruit.
+		//Increment the number of simulations ran counter
 		++numberOfSimulation;
-		
 		// Pick new 3 random words from your collection as the secret code word the recruit has to guess. 
 		vector<string> activeWords;
 		for(int i = 0; i < 3; i++)
@@ -55,26 +55,28 @@ int main()
 		}
 
 		// While recruit hasn’t made too many incorrect guesses and hasn’t guessed the secret word
-		do
+		while (currentWord < 3)
 		{
 			
 			//this gets the size of the first word which will increase after the recruit guesses it correctly
-			currentWordSize = activeWords.at(currentWord).size();
+			int currentWordSize = activeWords.at(currentWord).size();
 			int guesses = currentWordSize * 2;
 
 			//this is the user array where we will check this array with the active word array
 			vector<char> userGuess;
 			vector<char> activeLetters(activeWords.at(currentWord).begin(), activeWords.at(currentWord).end());
-			
+			vector<char> guessesMade;
+			//this sets up the vector to start if only blank spaces.
 			for(int i = 0; i < currentWordSize; i++)
 			{
 				userGuess.push_back('_');
 			}
 			do
 			{
-				//this displays the current word
-				cout <<  "\nHere is your word:" << activeWords.at(currentWord) << "\n";
-				for(int i = 0; i < userGuess.size(); i++)
+				//this displays the known and unknown characters in the current word
+				// Show player how much of the secret word he or she has guessed
+				// Update the word guessed so far with the new letter
+				for(unsigned int i = 0; i < userGuess.size(); i++)
 				{
 					cout << userGuess.at(i);
 					cout << " ";
@@ -83,77 +85,101 @@ int main()
 
 				//gets the users guess
 				char letter;
+				//     Get recruit's next guess
 				cout << "Enter your guess :>";
 				cin >> letter;
 
-				//checks the letter to see if it is inside the current word
-				int test = false;
-				for(int i = 0; i < currentWordSize; i++)
+				
+				//     While recruit has entered a letter that he or she has already guessed
+				if(find(guessesMade.begin(), guessesMade.end(), letter) != guessesMade.end())
 				{
-					if(activeWords.at(currentWord).find(letter) == 0)
+					
+					cout << "\nUh oh! looks like you've already guessed this word! why don't you pick a new one.\n";
+				}else
+				{
+					//checks to see if the guess is inside the current word
+					if (find(activeLetters.begin(), activeLetters.end(), letter) != activeLetters.end())
 					{
-						test = true;
+						//goes through every element and replaces the character to the correct place
+						for (unsigned int i = 0; i < activeLetters.size(); i++)
+						{
+							//checks the letter to see if it is inside the current word
+							// If the guess is in the secret word
+							if (activeLetters.at(i) == letter)
+							{
+								//found a correct letter
+								userGuess.at(i) = letter;
+							}
+						}
+						
+						//          Tell the recruit the guess is correct
+						cout << "\nYou got the correct letter!\n";
 					}
-					if(test)
+					else
 					{
-						userGuess.at(i) = letter;
-						test = false;
+						//wrong guess
+						//Increment the number of incorrect guesses the recruit has made
+						guesses--;
+						// Tell the recruit the guess is incorrect
+						//  Tell recruit how many incorrect guesses he or she has left
+						cout << "\nOops! that is not the correct letter!\nYou have " << guesses << " guesses left.\n";
+					}
+
+					//checks to see if the word is finished
+					if (activeLetters == userGuess)
+					{
+						//start the next word
+						//Congratulate the recruit on guessing the secret words
+						cout << "\nGuess completed\n";
+						for (unsigned int i = 0; i < userGuess.size(); i++)
+						{
+							cout << userGuess.at(i);
+							cout << " ";
+						}
+						cout << "\n\n";
+						break;
 					}
 				}
-				system("pause"); 
+				//     Add the new guess to the group of used letters
+				guessesMade.push_back(letter);
+				
+			// If the recruit has made too many incorrect guesses
 			} while (guesses > 0);//will keep looping until the user gets the correct word or misses too many times
 
-			currentWord++;
+			if(guesses > 0)
+			{
+				currentWord++;
+				
+			}else
+			{
+				//Tell the recruit that he or she has failed the Keywords II course.
+				cout << "\nYou ran out of guess and you have failed this course!\n";
+				exit(0);
+			}
 			
-		} while (currentWord < 3);//this will keep looping until all three words have been gone through
-		//     Tell recruit how many incorrect guesses he or she has left
+			
+		} //this will keep looping until all three words have been gone through
+		
 
-		//     Show recruit the letters he or she has guessed
+		do
+		{
+			// Ask the recruit if they would like to run the simulation again
+			cout << "\nWould you like to run the simulation again? Y/N :>";
+			cin >> answer;
 
-		//     Show player how much of the secret word he or she has guessed
-
-		//     Get recruit's next guess
-
-		//     While recruit has entered a letter that he or she has already guessed
-
-		//          Get recruit ’s guess
-
-		//     Add the new guess to the group of used letters
-
-		//     If the guess is in the secret word
-
-		//          Tell the recruit the guess is correct
-
-		//          Update the word guessed so far with the new letter
-
-		//     Otherwise
-
-		//          Tell the recruit the guess is incorrect
-
-		//          Increment the number of incorrect guesses the recruit has made
-
-		// If the recruit has made too many incorrect guesses
-
-		//     Tell the recruit that he or she has failed the Keywords II course.
-
-		// Otherwise
-
-		//     Congratulate the recruit on guessing the secret words
-
-		// Ask the recruit if they would like to run the simulation again
-
-		// If the recruit wants to run the simulation again
-
-		//     Increment the number of simulations ran counter
-
-		//     Move program execution back up to // Display the simulation # is starting to the recruit. 
-
-		// Otherwise 
+			// If the recruit does not want to run the simulation again
+			if (answer == 'N')
+			{
+				exit(0);
+			}
+		} while (answer != 'N' && answer != 'Y');
 
 		//     Display End of Simulations to the recruit
-
+		cout << "\nEnd of Simulation!\n";
 		//     Pause the Simulation with press any key to continue
-	} while (numberOfSimulation < 3);
+		system("pause");
+		//Move program execution back up to // Display the simulation # is starting to the recruit.
+	} while (numberOfSimulation < 4);
 
 	return 0;
 }
